@@ -1,6 +1,6 @@
 from Galaxy.Planet import planet
 from enum import Enum
-from shapely.geometry import Point
+from shapely.geometry import Point, LineString
 from shapely.geometry.polygon import Polygon
 
 
@@ -20,43 +20,19 @@ class galaxy:
 
     """
     We need to check if all planets in this galaxy are in a straight line
-    We will calculate a line from the first two planets and check the lines
-    from the first planet to all others to see they are equal.
+    We will calculate a line from the first two planets and to see if all
+    others are inside of it.
     """
 
     def planetsAreAligned(self, day):
-        # We first calculate the slope of the two first planets
-        t0 = self.planets[0].calculatePlanetPosition(day)
-        t1 = self.planets[1].calculatePlanetPosition(day)
-
-        infiniteSlope = False
-        intercept = 0
-        try:
-            slope = (t0[0] - t1[0]) / (t0[1] - t1[1])
-        except ZeroDivisionError:
-            infiniteSlope = True
-        else:
-            intercept = t0[1] - slope * t0[0]
+        line = LineString([self.planets[0].calculatePlanetPosition(
+            day), self.planets[1].calculatePlanetPosition(day)])
 
         for p in self.planets[2::]:
-            t = p.calculatePlanetPosition(day)
-
-            iSlope = False
-            inter = 0
-            try:
-                s = (t0[0] - t[0]) / (t0[1] - t[1])
-            except ZeroDivisionError:
-                iSlope = True
-            else:
-                inter = t0[1] - s * t0[0]
-
-            if iSlope is True and infiniteSlope is True:
-                continue
-
-            if s != slope or inter != intercept:
+            if not line.within(Point(p.calculatePlanetPosition(day))):
                 return planetsPosition.notAligned
 
-        if intercept is 0:
+        if line.within(Point(0, 0)):
             return planetsPosition.alignedWithTheSun
         return planetsPosition.alignedWithEachother
 
