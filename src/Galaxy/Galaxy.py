@@ -1,11 +1,16 @@
 from Galaxy.Planet import planet
 from enum import Enum
+from shapely.geometry import Point
+from shapely.geometry.polygon import Polygon
 
 
-class planetsAligned(Enum):
+class planetsPosition(Enum):
     notAligned = 0
     alignedWithEachother = 1
     alignedWithTheSun = 2
+    sunInsidePolygon = 3
+    sunNotInsidePolygon = 4
+
 
 class galaxy:
     planets = []
@@ -49,8 +54,25 @@ class galaxy:
                 continue
 
             if s != slope or inter != intercept:
-                return planetsAligned.notAligned
+                return planetsPosition.notAligned
 
         if intercept is 0:
-            return planetsAligned.alignedWithTheSun
-        return planetsAligned.alignedWithEachother
+            return planetsPosition.alignedWithTheSun
+        return planetsPosition.alignedWithEachother
+
+    """
+    This method will be responsible for creating a polygon with all the
+    galaxy's planets and determining whether the sun is inside of it
+    If the sun is inside, also returns the polygons perimeter
+    """
+
+    def calculateSunsPosition(self, day):
+        positions = []
+        for p in self.planets:
+            positions.append(p.calculatePlanetPosition(day))
+
+        poly = Polygon(positions)
+
+        if poly.contains(Point(0, 0)):
+            return (planetsPosition.sunInsidePolygon, poly.length)
+        return (planetsPosition.sunNotInsidePolygon, poly.length)
