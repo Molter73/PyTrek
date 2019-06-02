@@ -1,4 +1,4 @@
-from math import sin, cos
+from math import sin, cos, radians
 
 
 class Planet:
@@ -14,5 +14,6 @@ class Planet:
     """
 
     def calculate_planet_position(self, day=0):
-        return (self.distance * cos(self.speed * day),
-                self.distance * sin(self.speed * day))
+        return (
+            round(self.distance * cos(radians(self.speed * day)), 2),
+            round(self.distance * sin(radians(self.speed * day)), 2))
