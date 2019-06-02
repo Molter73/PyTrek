@@ -1,38 +1,40 @@
-from Galaxy.Planet import planet
-from Galaxy.Galaxy import galaxy, planetsPosition
+from galaxy.planet import Planet
+from galaxy.galaxy import Galaxy, PlanetsPosition
 
 
 def main():
-    Ferengi = planet(distance=500, speed=-1)
-    Betasoide = planet(distance=2000, speed=-3)
-    Vulcan = planet(distance=1000, speed=5)
+    ferengi = Planet(distance=500, speed=-1)
+    betasoide = Planet(distance=2000, speed=-3)
+    vulcan = Planet(distance=1000, speed=5)
 
-    StarTrekGalaxy = galaxy([Ferengi, Betasoide, Vulcan])
+    star_trek_galaxy = Galaxy([ferengi, betasoide, vulcan])
 
-    draftDays = 0
-    perfectDays = 0
-    rainyDay = 0
-    mostRainDay = -1
-    mostRainPerimeter = 0
+    draft_days = 0
+    perfect_days = 0
+    rainy_day = 0
+    most_rain_day = -1
+    most_rain_perimeter = 0
 
     for day in range(3650):
-        alignment = StarTrekGalaxy.planetsAreAligned(day)
-        if alignment is planetsPosition.alignedWithTheSun:
-            draftDays += 1
-        elif alignment is planetsPosition.alignedWithEachother:
-            perfectDays += 1
+        alignment = star_trek_galaxy.planets_are_aligned(day)
+        if alignment is PlanetsPosition.ALIGNED_WITH_THE_SUN:
+            draft_days += 1
+        elif alignment is PlanetsPosition.ALIGNED_WITH_EACHOTHER:
+            perfect_days += 1
         else:
             # if we are here, planets are forming a polygon
-            (sunsPosition, per) = StarTrekGalaxy.calculateSunsPosition(day)
-            if sunsPosition is planetsPosition.sunInsidePolygon:
-                rainyDay += 1
-                if per > mostRainPerimeter:
-                    mostRainDay = day
+            (sunsPosition, per) = star_trek_galaxy.calculate_suns_position(day)
+            if sunsPosition is PlanetsPosition.SUN_INSIDE_POLYGON:
+                rainy_day += 1
+                if per > most_rain_perimeter:
+                    most_rain_day = day
+                    most_rain_perimeter = per
 
-    print('Draft:', draftDays)
-    print('Perfect:', perfectDays)
-    print('Rainy:', rainyDay)
-    print('Most rain:', mostRainDay)
+    print('Draft:', draft_days)
+    print('Perfect:', perfect_days)
+    print('Rainy:', rainy_day)
+    print('Most rain:', most_rain_day)
+
 
 if __name__ == '__main__':
     main()
