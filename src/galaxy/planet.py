@@ -1,7 +1,7 @@
 from math import sin, cos
 
 
-class planet:
+class Planet:
     distance = 0
     speed = 0
 
@@ -13,6 +13,6 @@ class planet:
     Returns an (X,Y) pair, describing the planets position at a given day
     """
 
-    def calculatePlanetPosition(self, day=0):
+    def calculate_planet_position(self, day=0):
         return (self.distance * cos(self.speed * day),
                 self.distance * sin(self.speed * day))

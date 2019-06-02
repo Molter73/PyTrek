@@ -1,18 +1,17 @@
-from Galaxy.Planet import planet
 from enum import Enum
 from shapely.geometry import Point, LineString
 from shapely.geometry.polygon import Polygon
 
 
-class planetsPosition(Enum):
-    notAligned = 0
-    alignedWithEachother = 1
-    alignedWithTheSun = 2
-    sunInsidePolygon = 3
-    sunNotInsidePolygon = 4
+class PlanetsPosition(Enum):
+    NOT_ALIGNED = 0
+    ALIGNED_WITH_EACHOTHER = 1
+    ALIGNED_WITH_THE_SUN = 2
+    SUN_INSIDE_POLYGON = 3
+    SUN_NOT_INSIDE_POLYGON = 4
 
 
-class galaxy:
+class Galaxy:
     planets = []
 
     def __init__(self, planets=[]):
@@ -24,17 +23,17 @@ class galaxy:
     others are inside of it.
     """
 
-    def planetsAreAligned(self, day):
-        line = LineString([self.planets[0].calculatePlanetPosition(
-            day), self.planets[1].calculatePlanetPosition(day)])
+    def planets_are_aligned(self, day):
+        line = LineString([self.planets[0].calculate_planet_position(
+            day), self.planets[1].calculate_planet_position(day)])
 
         for p in self.planets[2::]:
-            if not line.within(Point(p.calculatePlanetPosition(day))):
-                return planetsPosition.notAligned
+            if not line.within(Point(p.calculate_planet_position(day))):
+                return PlanetsPosition.NOT_ALIGNED
 
         if line.within(Point(0, 0)):
-            return planetsPosition.alignedWithTheSun
-        return planetsPosition.alignedWithEachother
+            return PlanetsPosition.ALIGNED_WITH_THE_SUN
+        return PlanetsPosition.ALIGNED_WITH_EACHOTHER
 
     """
     This method will be responsible for creating a polygon with all the
@@ -42,13 +41,13 @@ class galaxy:
     If the sun is inside, also returns the polygons perimeter
     """
 
-    def calculateSunsPosition(self, day):
+    def calculate_suns_position(self, day):
         positions = []
         for p in self.planets:
-            positions.append(p.calculatePlanetPosition(day))
+            positions.append(p.calculate_planet_position(day))
 
         poly = Polygon(positions)
 
         if poly.contains(Point(0, 0)):
-            return (planetsPosition.sunInsidePolygon, poly.length)
-        return (planetsPosition.sunNotInsidePolygon, poly.length)
+            return (PlanetsPosition.SUN_INSIDE_POLYGON, poly.length)
+        return (PlanetsPosition.SUN_NOT_INSIDE_POLYGON, poly.length)
