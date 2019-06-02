@@ -1,5 +1,5 @@
-from galaxy.planet import Planet
-from galaxy.galaxy import Galaxy, PlanetsPosition
+from planet import Planet
+from galaxy import Galaxy, PlanetsPosition
 
 
 def main():
