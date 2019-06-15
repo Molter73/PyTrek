@@ -61,3 +61,7 @@ target/
 
 # Some other stuff
 sftp-config.json
+
+*.db
+
+\.vscode/

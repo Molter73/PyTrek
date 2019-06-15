@@ -1,6 +1,6 @@
 from peewee import *
 
-db = SqliteDatabase(None)
+db = PostgresqlDatabase(None)
 
 
 class Weather(Model):
@@ -11,6 +11,12 @@ class Weather(Model):
         verbose_name = "weather"
         verbose_name_plural = "weathers"
         database = db
+
+    def serialize(self):
+        return {
+            'day': self.date,
+            'weather': self.weather,
+        }
 
     def __str__(self):
         pass
