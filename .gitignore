@@ -65,3 +65,5 @@ sftp-config.json
 *.db
 
 \.vscode/
+
+src/main/db-config\.json
